@@ -64,12 +64,12 @@ for gen_flg = 1 : gen_num
 
     fprintf(file_data, "\n\nPairs: \n"); 
     for pair_flg = 1 : pair_num 
-        fprintf(file_data, "%d", ppl_paired(pair_flg*2 - 1, :)); 
-        fprintf(file_data, " "); 
-        fprintf(file_data, "%d", ppl_paired(pair_flg*2, :)); 
-        fprintf(file_data, " "); 
-        fprintf(file_data, "%d", crov_token(pair_flg)); 
-        fprintf(file_data, "  "); 
+        fprintf(file_data, "%d ", ppl_paired(pair_flg*2 - 1, :)); 
+        fprintf(file_data, "\n"); 
+        fprintf(file_data, "%d ", ppl_paired(pair_flg*2, :)); 
+        fprintf(file_data, "\n"); 
+        fprintf(file_data, "%d ", crov_token(pair_flg)); 
+        fprintf(file_data, "\n\n"); 
     end 
 
     fprintf(file_data, "\n\nMutated offspring: \n"); 
@@ -80,6 +80,10 @@ for gen_flg = 1 : gen_num
 
     % next generation, kill the latter half
     ppl = happy_darwinian(1:ppl_num, :); 
+
+    if (ppl_fit_asc(ppl_num) == 0) 
+        break; 
+    end
 
 end
 
@@ -94,21 +98,21 @@ bingo = ppl_asc(bingo_pos, :);
 bingo_unique = unique(bingo, 'rows'); 
 
 % print results
-fprintf(file_rslt, "Congratulations! You found %d sets of successful pattern for this %d-queen problem! \nThey are: \n", length(bingo_unique), q); 
+fprintf(file_rslt, "Congratulations! After %d generations, you found %d sets of successful patterns for this %d-queen problem! \nThey are: \n", gen_flg, size(bingo_unique, 1), q); 
 printppl(file_rslt, bingo_unique); 
 
 % boardize
 fprintf(file_rslt, "\n\ni.e. \n"); 
-for board_flg = 1 : length(bingo_unique) 
+for board_flg = 1 : size(bingo_unique, 1) 
     fprintf(file_rslt, "Pattern %d: \n", board_flg); 
-    chessbd(file_rslt, bingo_unique(queen_flg, :)); 
+    chessbd(file_rslt, bingo_unique(board_flg, :)); 
 end
 
 % print final generation
-if (length(bingo) == ppl_num) 
+if (size(bingo, 1) == ppl_num) 
     fprintf(file_rslt, "\n\nThe entire population of the final generation are good boys and good girls! They are: \n"); 
 else 
-    fprintf(file_rslt, "\n\nApart from these, there are altogether %d successful sets out of the population of %d: \n", length(bingo), ppl_num); 
+    fprintf(file_rslt, "\n\nApart from these, there are altogether %d successful sets out of the population of %d: \n", size(bingo, 1), ppl_num); 
     printppl(file_rslt, bingo); 
     
     fprintf(file_rslt, "\n\nAnd population of the final generation are: \n"); 
