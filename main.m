@@ -16,20 +16,20 @@ for gen_flg = 1 : gen_num
     % countdown
     fprintf("%d!\n", gen_flg); 
 
-    % fitness calculation and bubble sort
+    % parent fitness and bubble sort
     [ppl_asc, ppl_fit_asc] = fitnsort(ppl); 
 
-    % mating pool generation, simply replace the worst 20% with the best 20%
+    % 20% replacement mating pool generation 
     ppl_pool = [ppl_asc(1 : ppl_num*pool_coef, :); ppl_asc(1 : ppl_num*pool_coef, :); ppl(ppl_num*pool_coef + 1 : ppl_num*(1 - pool_coef), :)]; 
 
-    % pairing
+    % pairing by random token
     pair_token = randperm(ppl_num); 
     for pair_flg = 1 : pair_num 
         ppl_paired(pair_flg*2 - 1, :) = ppl_pool(pair_token(pair_flg*2 - 1), :); 
         ppl_paired(pair_flg*2, :) = ppl_pool(pair_token(pair_flg*2), :); 
     end
 
-    % crossover, order 1 
+    % order 1 crossover by random token
     crov_token = floor(rand(1, pair_num)*q) + 1; 
     for pair_flg = 1 : pair_num 
         parent_1 = ppl_paired(pair_flg*2 - 1, :); 
@@ -39,7 +39,7 @@ for gen_flg = 1 : gen_num
     end
     offspr = [son; daughter]; 
 
-    % mutation, swap two queens
+    % swapping mutation
     offspr_mtd = offspr; 
     for ppl_flg = 1 : ppl_num 
         for queen_flg = 1 : q 
@@ -55,28 +55,28 @@ for gen_flg = 1 : gen_num
     survivor = [ppl_asc; offspr_mtd]; 
     [happy_darwinian, happy_darwinian_fit] = fitnsort(survivor); 
 
-    % print, pairs and sites
-    %fprintf(file_data, "\n\nGen %d: \nPopulation: \n", gen_flg); 
-    %printppl(file_data, ppl); 
-%
-    %fprintf(file_data, "\nMating pool: \n"); 
-    %printppl(file_data, ppl_pool); 
-%
-    %fprintf(file_data, "\nPairs: \n"); 
-    %for pair_flg = 1 : pair_num 
-    %    fprintf(file_data, "%d", ppl_paired(pair_flg*2 - 1, :)); 
-    %    fprintf(file_data, " "); 
-    %    fprintf(file_data, "%d", ppl_paired(pair_flg*2, :)); 
-    %    fprintf(file_data, " "); 
-    %    fprintf(file_data, "%d", crov_token(pair_flg)); 
-    %    fprintf(file_data, "  "); 
-    %end 
-%
-    %fprintf(file_data, "\nMutated offspring: \n"); 
-    %printppl(file_data, offspr_mtd); 
-%
-    %fprintf(file_data, "\nAll survivors: \n"); 
-    %printppl(file_data, happy_darwinian); 
+    % print by generation
+    fprintf(file_data, "\n\n\nGen %d: \nPopulation: \n", gen_flg); 
+    printppl(file_data, ppl); 
+
+    fprintf(file_data, "\n\nMating pool: \n"); 
+    printppl(file_data, ppl_pool); 
+
+    fprintf(file_data, "\n\nPairs: \n"); 
+    for pair_flg = 1 : pair_num 
+        fprintf(file_data, "%d", ppl_paired(pair_flg*2 - 1, :)); 
+        fprintf(file_data, " "); 
+        fprintf(file_data, "%d", ppl_paired(pair_flg*2, :)); 
+        fprintf(file_data, " "); 
+        fprintf(file_data, "%d", crov_token(pair_flg)); 
+        fprintf(file_data, "  "); 
+    end 
+
+    fprintf(file_data, "\n\nMutated offspring: \n"); 
+    printppl(file_data, offspr_mtd); 
+
+    fprintf(file_data, "\n\nAll survivors: \n"); 
+    printppl(file_data, happy_darwinian); 
 
     % next generation, kill the latter half
     ppl = happy_darwinian(1:ppl_num, :); 
