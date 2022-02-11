@@ -1,8 +1,8 @@
 % configurations
 
-q = 32; % number of queens
+q = 8; % number of queens
 ppl_num = 1000; % population size
-gen_num = 1000; % number of generations
+gen_num = 100; % maximum number of generations
 pool_coef = 0.2; % proportion of CASTRATED population
 
 mtt_p = sqrt(1/(q*ppl_num)); % mutation probability, geometric mean of queen number and chromosome length
