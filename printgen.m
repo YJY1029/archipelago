@@ -2,9 +2,6 @@
     fprintf(file_data, "\n\n\nGen %d: \nPopulation: \n", gen_flg); 
     printppl(file_data, ppl); 
 
-    fprintf(file_data, "\n\nMating pool: \n"); 
-    printppl(file_data, ppl_pool); 
-
     fprintf(file_data, "\n\nPairs: \n"); 
     for pair_flg = 1 : pair_num 
         fprintf(file_data, "%d ", ppl_paired(pair_flg*2 - 1, :)); 
