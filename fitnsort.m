@@ -7,7 +7,7 @@ for unit_flg = 1 : unit_num
     for atker = 1 : q-1 
         for atkee = atker + 1 : q 
             fit_unit = abs(mtx(unit_flg,atker) - mtx(unit_flg,atkee)); 
-            if (fit_unit == atkee - atker) 
+            if (fit_unit == atkee - atker) || (fit_unit == 0) 
                 fit = fit + 1; 
             end
         end

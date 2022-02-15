@@ -1,12 +1,13 @@
 % configurations
-config; %q, ppl_num, gen_num, epoch_l, isle_num, mtt_p, pair_num 
+config; 
 
 % run scripts
 % initializing islands and populations
+tic; 
 if (gcp('nocreate') == 0) 
-    islands = parpool(isle_num); 
+    archipelago = parpool(isle_num); 
 else 
-    islands = gcp; 
+    archipelago = gcp; 
 end
 
 ppl = Composite(); 
@@ -16,12 +17,14 @@ for isle_flg = 1 : isle_num
         ppl{isle_flg} = ppl_temp; 
     end
 end
+fprintf("Initialization time: \n"); 
+toc; 
 
 tic; 
 
 for epoch_flg = 1 : epoch_num 
 
-    fprintf("Epoch No.%d completed. \n", epoch_flg); 
+    fprintf("Epoch %d completed. \n", epoch_flg); 
     % run isles
     spmd
         [ppl_next, ppl_next_fit] = isle(ppl); 
@@ -31,8 +34,8 @@ for epoch_flg = 1 : epoch_num
     perfect_ppl = 0; 
     for isle_flg = 1 : isle_num 
         perfect_ppl_unit = ppl_next_fit{isle_flg}; 
-        perfect_ppl = perfect_ppl + perfect_ppl_unit(ppl_num); 
-        % composites only support simple subscripting?? 
+        perfect_ppl = perfect_ppl + perfect_ppl_unit(end); 
+        % composites only support simple subscripting??? 
         % stash composite data in temps 
         ppl_1 = ppl_next{isle_flg}; 
         if (isle_flg ~= isle_num) 
@@ -59,41 +62,63 @@ for epoch_flg = 1 : epoch_num
     end
 
 end
+fprintf("Run time: \n"); 
 toc; 
 
-%delete(islands); 
+delete(rslt_data); 
+file_rslt = fopen(rslt_data, 'a'); 
 
-%rslt_data = "Results.txt"; 
-%delete(rslt_data); 
-%file_rslt = fopen(rslt_data, 'a'); 
-%
-%% BINGO! 
-%[ppl_asc, ppl_fit_asc] = fitnsort(ppl); 
-%bingo_pos = find(ppl_fit_asc == 0); 
-%bingo = ppl_asc(bingo_pos, :); 
-%bingo_unique = unique(bingo, 'rows'); 
-%
-%% print results
-%fprintf(file_rslt, "Congratulations! After %d generations, you found %d sets %of successful patterns for this %d-queen problem with a population of %d! %\nThey are: \n", gen_flg, size(bingo_unique, 1), q, ppl_num); 
-%printppl(file_rslt, bingo_unique); 
-%
-%% boardize
-%fprintf(file_rslt, "\n\ni.e. \n"); 
-%for board_flg = 1 : size(bingo_unique, 1) 
-%    fprintf(file_rslt, "Pattern %d: \n", board_flg); 
-%    chessbd(file_rslt, bingo_unique(board_flg, :)); 
-%end
-%
-%% print final generation
-%if (size(bingo, 1) == ppl_num) 
-%    fprintf(file_rslt, "\n\nThe entire population of the final generation %are good boys and good girls! They are: \n"); 
-%else 
-%    fprintf(file_rslt, "\n\nApart from these, there are altogether %d %successful sets out of the population of %d: \n", size(bingo, 1), %ppl_num); 
-%    printppl(file_rslt, bingo); 
-%    
-%    fprintf(file_rslt, "\n\nAnd population of the final generation are: \n")%; 
-%end
-%printppl(file_rslt, ppl);
-%
-%fclose('all'); 
-%disp("Let's go to check .txt files!"); 
+% BINGO! on every island 
+spmd 
+    isle_bingo_pos = find(ppl_next_fit == 0); 
+    isle_bingo = ppl_next(isle_bingo_pos, :); 
+    isle_bingo_uniq = unique(isle_bingo, 'rows'); 
+end
+
+% BINGO! overall 
+bingo = []; 
+for isle_flg = 1 : isle_num 
+    bingo = [bingo; isle_bingo{isle_flg}]; 
+end 
+bingo_uniq = unique(bingo, 'rows'); 
+
+% print overall results 
+fprintf(file_rslt, "Congratulations! \nAfter %d epochs (%d generations), you found %d sets of successful patterns for this %d-queen problem with %d islands in popolation sizes of %d! \nThey are (by rows): \n", epoch_flg, epoch_l*epoch_flg, size(bingo_uniq, 1), q, isle_num, ppl_num); 
+printppl(file_rslt, bingo_uniq); 
+
+% boardize
+fprintf(file_rslt, "\n\ni.e. \n"); 
+for board_flg = 1 : size(bingo_uniq, 1) 
+    fprintf(file_rslt, "Pattern %d \n", board_flg); 
+    chessbd(file_rslt, bingo_uniq(board_flg, :)); 
+end
+
+% print by island 
+fprintf(file_rslt, "\n\nFor unique solutions by island: "); 
+for isle_flg = 1 : isle_num 
+    fprintf(file_rslt, "\n%d solutions on island %d: \n", size(isle_bingo_uniq{isle_flg}, 1), isle_flg); 
+    printppl(file_rslt, isle_bingo_uniq{isle_flg}); 
+end 
+
+% final generation 
+if (size(bingo, 1) == ppl_num_sum) 
+    fprintf(file_rslt, "\n\nBy the way, all populations in the final generation are good boys and good girls! \n"); 
+else 
+    fprintf(file_rslt, "\n\nThere are altogether %d perfect guys out of the population sum of %d: \n", size(bingo, 1), ppl_num_sum); 
+    for isle_flg = 1 : isle_num 
+        fprintf(file_rslt, "%d individuals on island %d: \n", size(isle_bingo{isle_flg}, 1), isle_flg); 
+        printppl(file_rslt, isle_bingo{isle_flg}); 
+    end 
+    fprintf(file_rslt, "\n\nAnd populations of the final generation are: \n"); 
+end
+
+for isle_flg = 1 : isle_num 
+    fprintf(file_rslt, "\nIsland %d: \n", isle_flg); 
+    printppl(file_rslt, ppl_next{isle_flg}); 
+end 
+
+fclose('all'); 
+disp("Let's go to check .txt files!"); 
+
+% comment this if you would like to check running results in MATLAB manually
+delete(archipelago); 

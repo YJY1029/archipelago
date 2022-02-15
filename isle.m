@@ -1,7 +1,6 @@
 function [ppl_epoch, ppl_epoch_fit] = isle(ppl_ini) 
 
 config; 
-%gen_data = "Generation Data.txt"; 
 %delete(gen_data); 
 %file_data = fopen(gen_data, 'a'); 
 
@@ -41,15 +40,13 @@ for gen_flg = 1 : epoch_l
     survivor = [ppl_ini; offspr_mtd]; 
     [happy_darwinian, happy_darwinian_fit] = fitnsort(survivor); 
 
-    % print by generation
+    % !!!CAUTION!!! 
+    % print by generation, uncomment this if you would like to check full data 
+    % bugs might happen, a MUCH GREATER time cost and a MUCH BIGGER file size 
     %printgen; 
 
     % next generation, kill the latter half
     ppl_ini = happy_darwinian(1:ppl_num, :); 
-
-    %if (happy_darwinian_fit(ppl_num) == 0) 
-    %    break; 
-    %end
 
 end
 
