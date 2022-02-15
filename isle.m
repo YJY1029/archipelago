@@ -1,17 +1,16 @@
-function ppl_epoch = isle(ppl_ini) 
+function [ppl_epoch, ppl_epoch_fit] = isle(ppl_ini) 
 
+config; 
 %gen_data = "Generation Data.txt"; 
 %delete(gen_data); 
 %file_data = fopen(gen_data, 'a'); 
 
 % for every generation
 for gen_flg = 1 : epoch_l
-
-    fprintf("%d\n", gen_flg); 
     % local pooling and pairing, best 2 out of random bo_num 
     grp_token = floor(rand(bo_num, pair_num)*ppl_num) + 1; 
     for pair_flg = 1 : pair_num 
-        ppl_pool = ppl(grp_token(:, pair_flg), :); 
+        ppl_pool = ppl_ini(grp_token(:, pair_flg), :); 
         [ppl_bo, ppl_bo_fit] = fitnsort(ppl_pool); 
         ppl_paired(pair_flg*2 - 1 : pair_flg*2, :) = ppl_bo(1:2, :); 
     end
@@ -39,20 +38,23 @@ for gen_flg = 1 : epoch_l
     end
 
     % survivor fitness and bubble sort 
-    survivor = [ppl; offspr_mtd]; 
+    survivor = [ppl_ini; offspr_mtd]; 
     [happy_darwinian, happy_darwinian_fit] = fitnsort(survivor); 
 
     % print by generation
     %printgen; 
 
     % next generation, kill the latter half
-    ppl_epoch = happy_darwinian(1:ppl_num, :); 
+    ppl_ini = happy_darwinian(1:ppl_num, :); 
 
     %if (happy_darwinian_fit(ppl_num) == 0) 
     %    break; 
     %end
 
 end
+
+ppl_epoch = ppl_ini; 
+ppl_epoch_fit = happy_darwinian_fit(1:ppl_num); 
 
 %fclose('all'); 
 
