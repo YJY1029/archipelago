@@ -1,8 +1,8 @@
 % configurations
 
 % population param 
-q = 32; % number of queens
-ppl_num = 2000; % population size, even number 
+q = 16; % number of queens
+ppl_num = 1000; % population size, even number 
 isle_num = 8; % number of islands
 ppl_num_sum = isle_num*ppl_num; % sum of overall population 
 

@@ -1,6 +1,6 @@
 # EE6227 Assignment 4 
 
-*Please open this .md using a Markdown reader for a better experience. [Here](https://stackedit.io/app#) is a very nice online one for you. :)*
+*Please open this .md using a Markdown reader for a better experience. [Here](https://stackedit.io/app#) is a very nice online one for you :-)*
 
 This is an island model version of an N-queen algorithm for EE6227 assignment 4 (hereafter "**Archipelago**"), modified from the original algorithm for EE6227 assignment 3 (hereafter "**Islet**"). 
 
@@ -9,8 +9,8 @@ This is an island model version of an N-queen algorithm for EE6227 assignment 4 
 To run Archipelago, the reader may need: 
 
 1. MATLAB, R2013b or above recommended. 
-2. Parallel Computing Toolbox (hereafter "**Parbox**), version 7.4 recommended. 
-3. A computer with a multi-core processor, 8-core or above recommended. Or any other better device. 
+2. Parallel Computing Toolbox (hereafter "**Parbox**"), version 7.4 recommended. 
+3. A computer with a multi-core processor, 8-core or above recommended. (Or any other better device) 
 4. 16GiB RAM, or at least 4GiB free RAM for running. 
 
 Oldest available MATLAB version for Archipelago might be 2009b, but the reader would need to revise those parallel statements manually so that it works. 
@@ -22,9 +22,9 @@ For the reader's reference, my environment is:
 - MATLAB: R2021a Update 6 
 - Parbox: version 7.4 
 
-For a 16-queen, 1000-population, 8-island, \mu = \lambda problem, my environment averages an initialization time of around 40 seconds, and a run time for 0.3s/epoch(10 generations).
+For a 16-queen, 1000-population, 8-island, \mu = \lambda problem, my machine averages an initialization time of around 40 seconds, and a run time for 0.3s/epoch(10 generations).
 
-Judging from several test results, the initialization time greatly elevates with higher population sizes, while run time per generation seems to follow population size more than other parameters. 
+Judging from several test results, the initialization time greatly elevates with overall data size, while run time per generation seems to follow population size more than other parameters. 
 
 ## Parbox introduction 
 
@@ -42,7 +42,7 @@ Basically, I used *parpool(NumWorkers)* and *spmd statements; end* in this code.
 
 *parpool(NumWorkers)* initializes a cluster of *NumWorkers* workers for following parallel computing workloads. 
 
-*NumWorkers* corresponds to the physical core number of the running cluster, and its maximum number should be determined by MATLAB automatically. If not, simply type *parpool(512)* in the command window and the initialized pool have the maximum *NumWorkers*. The reader can also change her/his preferred default *NumWorkers* in Parbox's setting page. 
+*NumWorkers* corresponds to the physical core number of the running cluster, and its limit should be determined by MATLAB automatically. If not, simply type *parpool(512)* in the command window and the initialized pool have the maximum *NumWorkers*. The reader can also change her/his preferred default *NumWorkers* in Parbox's setting page. 
 
 To delete a pool, use *delete(PoolName)* or *delete(gcp('nocreate'))*. *gcp* represents *get current pool* while *'nocreate'* option tells MATLAB that if there is no pool existing, don't generate a new one. 
 
@@ -50,17 +50,19 @@ To delete a pool, use *delete(PoolName)* or *delete(gcp('nocreate'))*. *gcp* rep
 
 *spmd* is short for *single programme, multiple data sets*. In its *statements* part, every worker take up their own pieces of workload and starts working on them in parallel. 
 
-If workers return in same variable names, data will be overloaded into a *composite* type. For the data passed into *spmd* blocks, vice versa! 
+If workers return data in same variable names, those data will be overloaded into a *composite* type. For the data passed into *spmd* blocks, vice versa! 
 
 Data for a specific worker can be indexed via *{labindex}*. 
 
 ## To Run Archipelago 
 
-First, go to *config.m* and change the *isle_num* in line 6 to any number no greater than the maximum *NumWorkers* of your environment. 
+First, if you would like to increase or reduce the number of workers, simply go to *config.m* and change the *isle_num* in line 6. Note that this parameter is limited by the maximum *NumWorkers* of your environment. 
 
 Then, simply type *make* in the command window of MATLAB and hit the enter key. 
 
 Archipelago is moderately reconfigurable. The reader may change any parameters in the *config.m* file following the guiding comments. 
+
+Note that island models seem not very good for long chromosome problems. Therefore, it's not recommended to set a too high number of queens. 
 
 ## To Check Results 
 
