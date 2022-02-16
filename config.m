@@ -1,14 +1,14 @@
 % configurations
 
 % population param 
-q = 8; % number of queens
-ppl_num = 1000; % population size, even number 
+q = 16; % number of queens
+ppl_num = 3000; % population size, even number 
 isle_num = 8; % number of islands
 ppl_num_sum = isle_num*ppl_num; % sum of overall population 
 
 % time param 
 epoch_l = 10; % epoch period in generations
-epoch_num = 1000; % maximum number of epochs 
+epoch_num = 100; % maximum number of epochs 
 gen_num = epoch_l*epoch_num; % maximum number of generations
 
 % evolution param

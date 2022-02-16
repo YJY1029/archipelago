@@ -21,7 +21,6 @@ fprintf("Initialization time: \n");
 toc; 
 
 tic; 
-
 for epoch_flg = 1 : epoch_num 
 
     fprintf("Epoch %d completed. \n", epoch_flg); 
@@ -107,7 +106,7 @@ if (size(bingo, 1) == ppl_num_sum)
 else 
     fprintf(file_rslt, "\n\nThere are altogether %d perfect guys out of the population sum of %d: \n", size(bingo, 1), ppl_num_sum); 
     for isle_flg = 1 : isle_num 
-        fprintf(file_rslt, "%d individuals on island %d: \n", size(isle_bingo{isle_flg}, 1), isle_flg); 
+        fprintf(file_rslt, "\n%d individuals on island %d: \n", size(isle_bingo{isle_flg}, 1), isle_flg); 
         printppl(file_rslt, isle_bingo{isle_flg}); 
     end 
     fprintf(file_rslt, "\n\nAnd populations of the final generation are: \n"); 

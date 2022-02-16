@@ -24,7 +24,7 @@ For the reader's reference, my environment is:
 
 For a 16-queen, 1000-population, 8-island, \mu = \lambda problem, my environment averages an initialization time of around 40 seconds, and a run time for 0.3s/epoch(10 generations).
 
-To my shallow understanding, the initialization time greatly elevates with higher population sizes and/or more islands, while run time per generation shows no significant change in different parameter settings. 
+To my shallow understanding, the initialization time greatly elevates with higher population sizes and/or more islands, while run time per generation seems to follow population size than queen numbers. 
 
 ## Parbox introduction 
 
@@ -93,3 +93,8 @@ graph TD
     I --> J(Generation Data.txt) 
 ```
 
+On the microarchitecture level, there is no significant difference between Archipelago and Islet, except that pairing mechanism is changed from portion replacement to best-two-of-bo_num. 
+
+Comments are given at the beginnings for all code blocks for reviewer's reference. The reader may also refer to the *Code Introduction* part in *README_asgn3.md* for detailed algo implementations, and repetitive narrative is thus omitted here in this already tedious README file. 
+
+***Thanks for your review!***
