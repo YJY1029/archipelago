@@ -30,9 +30,10 @@ for epoch_flg = 1 : epoch_num
         [ppl_next, ppl_next_fit] = isle(ppl); 
     end
 
-    % population exchange, 50%
+    % population exchange, random half
     perfect_ppl = 0; 
-    for isle_flg = 1 : isle_num 
+    xchg_token = randperm(ppl_num); 
+    for isle_flg = 1 : isle_num - 1 
         perfect_ppl_unit = ppl_next_fit{isle_flg}; 
         perfect_ppl = perfect_ppl + perfect_ppl_unit(end); 
         % composites only support simple subscripting??? 
@@ -43,9 +44,9 @@ for epoch_flg = 1 : epoch_num
         else 
             ppl_2 = ppl_next{1}; 
         end 
-        ppl_swap = ppl_1(1 : ppl_num/2, :); 
-        ppl_1(1 : ppl_num/2, :) = ppl_2(1 : ppl_num/2, :); 
-        ppl_2(1 : ppl_num/2, :) = ppl_swap; 
+        ppl_swap = ppl_1(xchg_token(1 : ppl_num/2), :); 
+        ppl_1(xchg_token(1 : ppl_num/2), :) = ppl_2(xchg_token(1 : ppl_num/2), :); 
+        ppl_2(xchg_token(1 : ppl_num/2), :) = ppl_swap; 
 
         %pop data from stash 
         ppl_next{isle_flg} = ppl_1; 

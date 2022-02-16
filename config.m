@@ -8,12 +8,12 @@ ppl_num_sum = isle_num*ppl_num; % sum of overall population
 
 % time param 
 epoch_l = 10; % epoch period in generations
-epoch_num = 100; % maximum number of epochs 
+epoch_num = 1000; % maximum number of epochs 
 gen_num = epoch_l*epoch_num; % maximum number of generations
 
 % evolution param
 mtt_p = (1/q + 1/ppl_num)/2; % mutation probability 
-pair_num = ppl_num/2; % number of mating pairs, lambda = 3*mu 
+pair_num = 3*ppl_num/2; % number of mating pairs, lambda = 3*mu 
 bo_num = 5; % best 2 out of random bo_num pairing 
 
 % files 
