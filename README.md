@@ -62,7 +62,7 @@ Then, simply type *make* in the command window of MATLAB and hit the enter key.
 
 Archipelago is moderately reconfigurable. The reader may change any parameters in the *config.m* file following the guiding comments. 
 
-Note that island models seem not very good for long chromosome problems. Therefore, it's not recommended to set a too high number of queens. 
+For high queen number problems (e.g, 32-queen problem), due to the features of the island model, please adjust the epoch length to a relatively bigger number to ensure steady independent evolution on every island. Also, keeping the population at a relatively low size helps reducing run time. 
 
 ## To Check Results 
 
